@@ -1,0 +1,42 @@
+/* Desktop stage: center the terminal window and render an ambient backdrop. */
+.app {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: hidden;
+}
+
+/* Subtle moving accents that hint at "something" behind the window
+   without distracting from the terminal content. */
+.app::before,
+.app::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+.app::before {
+  width: 480px;
+  height: 480px;
+  top: -160px;
+  left: -120px;
+  background: radial-gradient(circle, rgba(255, 176, 0, 0.10) 0%, transparent 70%);
+}
+.app::after {
+  width: 520px;
+  height: 520px;
+  bottom: -180px;
+  right: -140px;
+  background: radial-gradient(circle, rgba(80, 110, 200, 0.08) 0%, transparent 70%);
+}
+
+@media (max-width: 720px) {
+  .app {
+    padding: 0;
+  }
+}
