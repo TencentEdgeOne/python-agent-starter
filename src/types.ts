@@ -65,6 +65,23 @@ export type ReplLine =
       isContinuation?: boolean;
     }
   | {
+      /**
+       * Post-stream Markdown block. While a turn is streaming we still emit
+       * one `text` ReplLine per token chunk for the live REPL feel; once the
+       * turn finishes, App.tsx collapses each contiguous run of `text` lines
+       * within that turn into a single `markdown` line and feeds it to
+       * react-markdown + remark-gfm. Tool/image/done lines stay where they
+       * are. Lines restored from /history are emitted as `markdown` directly
+       * since history has no streaming chunk concept.
+       */
+      kind: 'markdown';
+      id: string;
+      turnId: string;
+      text: string;
+      ts: number;
+      isContinuation?: boolean;
+    }
+  | {
       kind: 'tool';
       id: string;
       turnId: string;

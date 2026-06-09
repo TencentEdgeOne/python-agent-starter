@@ -1,3 +1,5 @@
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import type { ReplLine } from '../../types';
 import type { RawSseEvent } from '../../api';
 import { useT } from '../../i18n';
@@ -66,6 +68,18 @@ export default function ReplLineRow({ line, onOpenImage }: Props) {
             <span className={styles.agentPrompt}>{t('repl.prompt.agentLabel')}</span>
           )}
           {line.text}
+        </div>
+      );
+
+    case 'markdown':
+      return (
+        <div className={`${styles.line} ${styles.text} ${styles.markdown}`}>
+          {!line.isContinuation && (
+            <span className={styles.agentPrompt}>{t('repl.prompt.agentLabel')}</span>
+          )}
+          <span className={styles.markdownInner}>
+            <Markdown remarkPlugins={[remarkGfm]}>{line.text}</Markdown>
+          </span>
         </div>
       );
 

@@ -20,6 +20,29 @@ export function makeText(turnId: string, initial = '', isContinuation = false): 
   return { kind: 'text', id: newId(), turnId, text: initial, ts: Date.now(), isContinuation };
 }
 
+/**
+ * Build a post-stream `markdown` ReplLine. Used in two places:
+ *   1. App.tsx onDone — collapsing a contiguous run of streamed `text`
+ *      ReplLines into one block. The caller passes the FIRST line's id /
+ *      ts / isContinuation so the merged row keeps the original metadata.
+ *   2. historyToLines — restored assistant turns are emitted as markdown
+ *      directly, since history has no streaming-chunk concept.
+ */
+export function makeMarkdown(
+  turnId: string,
+  text: string,
+  opts: { id?: string; ts?: number; isContinuation?: boolean } = {},
+): ReplLine {
+  return {
+    kind: 'markdown',
+    id: opts.id ?? newId(),
+    turnId,
+    text,
+    ts: opts.ts ?? Date.now(),
+    isContinuation: opts.isContinuation,
+  };
+}
+
 export function makeTool(turnId: string, tool: string): ReplLine {
   return { kind: 'tool', id: newId(), turnId, tool, ts: Date.now() };
 }

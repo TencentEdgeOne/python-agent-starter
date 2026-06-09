@@ -40,7 +40,52 @@ function getExistingConversationId(): string | null {
   return localStorage.getItem(CONVERSATION_ID_STORAGE_KEY);
 }
 
-/** Map `Message[]` from /history into ReplLine[] (user / text only). */
+/**
+ * Collapse contiguous runs of `text` ReplLines that share `turnId` into a
+ * single `markdown` ReplLine. Tool / image / done / error / restored / etc.
+ * lines are passthrough — they stay where they are and act as run boundaries.
+ *
+ * Used in onDone (and onError, on the rare path where the agent emitted
+ * partial text before failing) to upgrade just-finished assistant text to
+ * post-stream markdown rendering. Idempotent: lines already of kind
+ * `markdown` are passthrough too, so calling this twice on the same array
+ * is a no-op.
+ */
+function collapseTurnTextToMarkdown(lines: ReplLine[], turnId: string): ReplLine[] {
+  const out: ReplLine[] = [];
+  let buf: ReplLine[] = []; // accumulating contiguous `text` lines for `turnId`
+
+  const flush = () => {
+    if (buf.length === 0) return;
+    const first = buf[0] as Extract<ReplLine, { kind: 'text' }>;
+    const merged: ReplLine = {
+      kind: 'markdown',
+      // Reuse the FIRST text line's id/ts/isContinuation so React can keep
+      // this row in place (no key churn) and the on-screen position
+      // doesn't jump when we replace the run.
+      id: first.id,
+      turnId: first.turnId,
+      ts: first.ts,
+      isContinuation: first.isContinuation,
+      text: buf.map(l => (l as Extract<ReplLine, { kind: 'text' }>).text).join(''),
+    };
+    out.push(merged);
+    buf = [];
+  };
+
+  for (const line of lines) {
+    if (line.kind === 'text' && line.turnId === turnId) {
+      buf.push(line);
+      continue;
+    }
+    flush();
+    out.push(line);
+  }
+  flush();
+  return out;
+}
+
+/** Map `Message[]` from /history into ReplLine[] (user / markdown). */
 function historyToLines(history: Message[]): ReplLine[] {
   const out: ReplLine[] = [];
   for (const m of history) {
@@ -48,16 +93,18 @@ function historyToLines(history: Message[]): ReplLine[] {
     if (m.role === 'user') {
       out.push({ kind: 'user', id: m.id, text: m.content, ts: m.timestamp });
     } else {
-      // each restored assistant turn becomes a single text line; we don't have
-      // its turnId anymore so we generate a synthetic one.
+      // Restored assistant turns are emitted as `markdown` directly:
+      // history has no streaming-chunk concept, the message is already
+      // a complete blob, and we want it to render with the same
+      // post-stream markdown affordances as a freshly-finished turn.
       out.push({
-        kind: 'text',
+        kind: 'markdown',
         id: m.id,
         turnId: `restored-${m.id}`,
         text: m.content,
         ts: m.timestamp,
-        // Restored assistant turns only have one text line (no intermediate
-        // tool events were stored), so they always carry the agent▸ prefix.
+        // Restored assistant turns have no intermediate tool events,
+        // so they always carry the agent▸ prefix.
         isContinuation: false,
       });
     }
@@ -356,7 +403,10 @@ function AppInner() {
             const meta = turnMetaRef.current;
             if (meta) {
               const doneLine = makeDone(meta.turnId, meta.startTs, meta.toolRounds);
-              setLines(prev => [...prev, doneLine]);
+              setLines(prev => [
+                ...collapseTurnTextToMarkdown(prev, meta.turnId),
+                doneLine,
+              ]);
               turnMetaRef.current = null;
             }
             finishStream();
@@ -367,7 +417,13 @@ function AppInner() {
             const errLine = makeError(err.message || t('status.error'), meta?.turnId);
             const padLine =
               meta && !meta.hasText ? makeText(meta.turnId, '', true) : null;
-            setLines(prev => (padLine ? [...prev, errLine, padLine] : [...prev, errLine]));
+            setLines(prev => {
+              // Even on error, collapse whatever text the model managed to
+              // emit so the user sees rendered markdown rather than a
+              // dangling streaming run alongside the error line.
+              const collapsed = meta ? collapseTurnTextToMarkdown(prev, meta.turnId) : prev;
+              return padLine ? [...collapsed, errLine, padLine] : [...collapsed, errLine];
+            });
             if (meta) turnMetaRef.current = null;
             finishStream();
           },
@@ -388,7 +444,12 @@ function AppInner() {
     }
     const meta = turnMetaRef.current;
     const abortLine = makeSysHint(t('repl.status.aborted'), 'warn');
-    setLines(prev => [...prev, abortLine]);
+    // Collapse any partial text the model emitted before abort so the row
+    // settles into its final markdown form (matches onDone / onError).
+    setLines(prev => {
+      const collapsed = meta ? collapseTurnTextToMarkdown(prev, meta.turnId) : prev;
+      return [...collapsed, abortLine];
+    });
     setLoading(false);
     setPendingTurnId(null);
 

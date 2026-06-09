@@ -57,16 +57,7 @@ SYSTEM_PROMPT = (
     "   Briefly explain the failure, adjust the parameters only if the fix is clear, otherwise ask the user for guidance.\n"
     "5. Do not perform destructive file or shell operations unless the user explicitly asks for them.\n"
     "6. If the task can be answered without tools, answer directly and keep the response concise.\n"
-    "Only call tools that appear in the function-calling schema provided to you.\n\n"
-    "Output format:\n"
-    "Reply in plain text only. Do NOT use any Markdown syntax — no headings (#, ##),\n"
-    "no bold/italic (**, *, _), no bullet or numbered lists (-, *, 1.), no tables,\n"
-    "no fenced code blocks (```...```), no inline backticks, no blockquotes (>),\n"
-    "no horizontal rules (---), no links in [text](url) form. The frontend renders\n"
-    "the response as raw text and will not interpret Markdown. If you need to show\n"
-    "code, indent it with spaces or label it inline (e.g. \"Run: ls -la\"). Use blank\n"
-    "lines for paragraph breaks; use plain dashes (\"- \") at the start of a line for\n"
-    "simple itemized lists if absolutely necessary, but prefer running prose."
+    "Only call tools that appear in the function-calling schema provided to you."
 )
 
 # Maximum number of tool call rounds to prevent infinite loops
