@@ -1,7 +1,5 @@
 # Python Starter Agent
 
-**语言：** [English](./README.md) | 简体中文
-
 跑在 EdgeOne Makers 上的极简 Python LLM Agent 模板：直接用原生 `httpx` 调 OpenAI 兼容的 Chat Completions，搭配 EdgeOne 沙箱工具调用与基于 `context.store` 的会话记忆。不依赖任何 Agent 框架。
 
 **Framework：** None (raw Python) · **Category：** Quick Start <!-- TODO: confirm --> · **Language：** Python

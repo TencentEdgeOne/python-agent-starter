@@ -1,7 +1,5 @@
 # Python Starter Agent
 
-**Language:** English | [简体中文](./README_zh-CN.md)
-
 A minimal Python LLM Agent template on EdgeOne Makers — built on raw `httpx` against an OpenAI-compatible Chat Completions endpoint, with EdgeOne sandbox tool calling and `context.store`-backed conversation memory. No agent framework.
 
 **Framework:** None (raw Python) · **Category:** Quick Start <!-- TODO: confirm --> · **Language:** Python
