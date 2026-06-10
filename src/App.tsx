@@ -7,6 +7,7 @@ import ReplShell from './components/repl/ReplShell';
 import ReplStream from './components/repl/ReplStream';
 import ReplPrompt from './components/repl/ReplPrompt';
 import ImageLightbox from './components/ImageLightbox';
+import GitHubLink from './components/GitHubLink';
 import {
   makeDone,
   makeError,
@@ -592,6 +593,7 @@ export default function App() {
   return (
     <I18nProvider>
       <AppInner />
+      <GitHubLink />
     </I18nProvider>
   );
 }
