@@ -37,33 +37,23 @@ export interface StreamCallbacks {
 
 /** Get conversation history for restoring the chat window after page refresh. */
 export async function fetchConversationHistory(conversationId: string): Promise<Message[]> {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const res = await fetch(API.history, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'makers-conversation-id': conversationId,
-        },
-        body: JSON.stringify({}),
-      });
+  try {
+    const res = await fetch(API.history, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'makers-conversation-id': conversationId,
+      },
+      body: JSON.stringify({}),
+    });
 
-      // 409 = Active request on same conversation (React StrictMode double-render), retry shortly
-      if (res.status === 409) {
-        await new Promise(r => setTimeout(r, 500));
-        continue;
-      }
+    if (!res.ok) return [];
 
-      if (!res.ok) return [];
-
-      const data = await res.json().catch(() => null) as { messages?: Message[] } | null;
-      return Array.isArray(data?.messages) ? data.messages : [];
-    } catch {
-      return [];
-    }
+    const data = await res.json().catch(() => null) as { messages?: Message[] } | null;
+    return Array.isArray(data?.messages) ? data.messages : [];
+  } catch {
+    return [];
   }
-
-  return [];
 }
 
 /**
