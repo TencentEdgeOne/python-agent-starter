@@ -66,7 +66,7 @@ python-starter/
 │   ├── _logger.py                  # Logger utility (private)
 │   ├── _session.py                 # Session adapter over context.store (private)
 │   └── _tools.py                   # EdgeOne tool registry (private)
-├── cloud-functions/                 # Python backend (EdgeOne Pages Python cloud functions, stateless)
+├── cloud-functions/                 # Python backend (EdgeOne Makers Python cloud functions, stateless)
 │   ├── history/index.py            # POST /history — conversation history
 │   └── _logger.py                  # Logger utility (private)
 ├── src/                             # React + Vite + TypeScript frontend

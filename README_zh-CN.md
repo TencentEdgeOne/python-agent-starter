@@ -66,7 +66,7 @@ python-starter/
 │   ├── _logger.py                  # 日志工具（私有）
 │   ├── _session.py                 # 基于 context.store 的会话适配（私有）
 │   └── _tools.py                   # EdgeOne 工具注册表（私有）
-├── cloud-functions/                 # Python 后端（EdgeOne Pages Python cloud functions，无状态）
+├── cloud-functions/                 # Python 后端（EdgeOne Makers Python cloud functions，无状态）
 │   ├── history/index.py            # POST /history —— 对话历史
 │   └── _logger.py                  # 日志工具（私有）
 ├── src/                             # React + Vite + TypeScript 前端

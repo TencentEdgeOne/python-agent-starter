@@ -40,7 +40,7 @@ const en = {
   "trace.emptyHint": "After sending a message, raw backend SSE data will be displayed here.",
 
   // ─── REPL UI ─────────────────────────────────────────────────────────
-  "repl.motd.title": "Python LLM Agent · EdgeOne Pages Functions",
+  "repl.motd.title": "Python LLM Agent · EdgeOne Makers Functions",
   "repl.motd.tools": "Tools available: commands  files  code_interpreter  browser",
   "repl.motd.help": "Type a question and press Enter. Ctrl+C aborts. Ctrl+L clears. Ctrl+T toggles trace. Ctrl+/ shows help.",
   "repl.prompt.label": "user▸ ",
