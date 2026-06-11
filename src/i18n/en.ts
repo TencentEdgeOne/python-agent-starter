@@ -71,6 +71,10 @@ const en = {
 
   // ─── Aria labels ─────────────────────────────────────────────────────
   "aria.closeImagePreview": "Close image preview",
+
+  // ─── Floating bottom-right action badges ─────────────────────────────
+  "floatingLink.deploy": "Deploy",
+  "floatingLink.github": "GitHub",
 } as const;
 
 export default en;

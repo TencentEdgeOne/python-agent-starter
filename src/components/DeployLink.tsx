@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useT } from '../i18n';
 
 const TEMPLATE = 'python-starter-agent';
 const AGENT_LANG = 'python';
@@ -20,21 +21,21 @@ function getDeployUrl(): string {
 }
 
 /**
- * Floating rocket badge for one-click deploy. Pinned next to the
- * GitHub badge in the bottom-right viewport corner. Inline styles only,
- * so the component drops into any layout without depending on a
- * particular styling system.
+ * Floating rocket badge for one-click deploy. Pinned to the left of
+ * the GitHub badge in the bottom-right viewport corner. A localised
+ * tooltip floats above the badge on hover/focus.
  */
 export default function DeployLink() {
   const [hover, setHover] = useState(false);
+  const { t } = useT();
+  const label = t('floatingLink.deploy');
 
   return (
     <a
       href={getDeployUrl()}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Deploy to EdgeOne Makers"
-      title="Deploy to EdgeOne Makers"
+      target='_blank'
+      rel='noopener noreferrer'
+      aria-label={label}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onFocus={() => setHover(true)}
@@ -57,21 +58,42 @@ export default function DeployLink() {
         textDecoration: 'none',
       }}
     >
+      <span
+        role='tooltip'
+        style={{
+          position: 'absolute',
+          bottom: 'calc(100% + 6px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          padding: '4px 8px',
+          borderRadius: 4,
+          background: 'rgba(31,41,55,0.92)',
+          color: '#f9fafb',
+          fontSize: 12,
+          lineHeight: 1.4,
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+          opacity: hover ? 1 : 0,
+          transition: 'opacity 140ms ease',
+        }}
+      >
+        {label}
+      </span>
       <svg
-        viewBox="0 0 24 24"
+        viewBox='0 0 24 24'
         width={22}
         height={22}
-        fill="none"
-        stroke="currentColor"
+        fill='none'
+        stroke='currentColor'
         strokeWidth={1.8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        aria-hidden='true'
       >
-        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09Z" />
-        <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2Z" />
-        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+        <path d='M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09Z' />
+        <path d='M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2Z' />
+        <path d='M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0' />
+        <path d='M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5' />
       </svg>
     </a>
   );

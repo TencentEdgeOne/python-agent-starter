@@ -71,6 +71,10 @@ const zh = {
 
   // ─── Aria labels ─────────────────────────────────────────────────────
   "aria.closeImagePreview": "关闭图片预览",
+
+  // ─── Floating bottom-right action badges ─────────────────────────────
+  "floatingLink.deploy": "一键部署",
+  "floatingLink.github": "GitHub",
 } as const;
 
 export default zh;
