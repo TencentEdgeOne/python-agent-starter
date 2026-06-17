@@ -79,6 +79,15 @@
   display: inline-block;
   width: calc(100% - 2.5em);  /* leave room for the agent▸ prompt */
   vertical-align: top;
+  /* The outer `.line` has `white-space: pre-wrap` for the terminal feel
+   * of streaming text lines. CSS `white-space` is inherited, so without
+   * this override every `\n` text node react-markdown leaves between
+   * sibling blocks (and every soft break inside a paragraph) renders
+   * as a real line break, producing visible blank lines between
+   * paragraphs / headings / list items. Reset to `normal` so block
+   * spacing comes solely from the `> * + * { margin-top: 0.5em }`
+   * rule below, and soft breaks in paragraph text collapse to a space. */
+  white-space: normal;
 }
 /* Strip default browser margins from every block child so the markdown
  * doesn't push extra vertical space into the REPL. The first paragraph

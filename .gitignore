@@ -52,6 +52,7 @@ __pycache__/
 *.egg-info/
 
 # AI assistant local instructions
+.claude/
 CLAUDE.md
 
 # Tencent Cloud EdgeOne

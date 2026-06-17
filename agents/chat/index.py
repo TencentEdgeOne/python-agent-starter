@@ -61,7 +61,7 @@ SYSTEM_PROMPT = (
 )
 
 # Maximum number of tool call rounds to prevent infinite loops
-MAX_TOOL_ROUNDS = 10
+MAX_TOOL_ROUNDS = 3
 MAX_MESSAGE_LENGTH = 10000
 
 
